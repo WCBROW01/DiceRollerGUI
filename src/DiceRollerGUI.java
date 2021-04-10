@@ -21,6 +21,11 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.EmptyBorder;
 
+/**
+ * D&D dice roller Swing application
+ * @author Will Brown
+ * @version 1.0-alpha
+ */
 @SuppressWarnings("serial")
 public class DiceRollerGUI extends JFrame {
 	
@@ -35,7 +40,10 @@ public class DiceRollerGUI extends JFrame {
 	private JButton rollButton;
 	private JCheckBox genSeparatelyBox;
 
-	// Launch the application.
+	/**
+	 * Launch the application.
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -55,7 +63,9 @@ public class DiceRollerGUI extends JFrame {
 		});
 	}
 
-	// Create the frame.
+	/**
+	 * Create the frame.
+	 */
 	public DiceRollerGUI() {
 		setTitle("Dice Roller");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -100,10 +110,8 @@ public class DiceRollerGUI extends JFrame {
 				modifier = 0;
 				
 				// If an error is found in the text boxes, show this dialog box.
-				if (findRollErrors())
-					JOptionPane.showMessageDialog(getParent(), "Please enter valid values.", "Unable to roll", JOptionPane.ERROR_MESSAGE);
-				else
-					generateDiceRolls();
+				if (findRollErrors()) JOptionPane.showMessageDialog(getParent(), "Please enter valid values.", "Unable to roll", JOptionPane.ERROR_MESSAGE);
+				else generateDiceRolls();
 			}
 		});
 		inputPanel.add(rollButton);
@@ -144,29 +152,39 @@ public class DiceRollerGUI extends JFrame {
 		outputPanel.add(genSeparatelyBox, gbc_genSeparatelyBox);
 	}
 	
+	/**
+	 * Generates dice rolls
+	 */
 	private void generateDiceRolls() {
 		Random rng = new Random();
 		
 		// If the user wants to roll multiple die but not add them up, we need to do something different.
-		if (genSeparatelyBox.isSelected())
-			for (int diceNum = 0; diceNum < Integer.parseInt(diceNumField.getText()); diceNum++)
+		if (genSeparatelyBox.isSelected()) {
+			for (int diceNum = 0; diceNum < Integer.parseInt(diceNumField.getText()); diceNum++) {
 				outputArea.append(Integer.toString(rng.nextInt(Integer.parseInt(diceSidesField.getText())) + 1 + modifier) + "\n");
-		else {
+			}
+		} else {
 			int result = 0;
 			
-			for (int diceNum = 0; diceNum < Integer.parseInt(diceNumField.getText()); diceNum++)
+			for (int diceNum = 0; diceNum < Integer.parseInt(diceNumField.getText()); diceNum++) {
 				result += rng.nextInt(Integer.parseInt(diceSidesField.getText())) + 1;
+			}
 			
 			outputArea.append(Integer.toString(result + modifier) + "\n");
 		}
 	}
 	
+	/**
+	 * Error checking algorithm for bad user input.
+	 * @return whether an error was found in any values entered by the user
+	 */
 	private boolean findRollErrors() {
 		boolean rollError = false;
 		
 		try {
-			if (diceNumField.getText().length() == 0 || Integer.parseInt(diceNumField.getText()) < 1)
+			if (diceNumField.getText().length() == 0 || Integer.parseInt(diceNumField.getText()) < 1) {
 				throw new NumberFormatException();
+			}
 			
 			diceNumLabel.setForeground(Color.BLACK);
 		} catch (NumberFormatException e2) {
@@ -175,8 +193,9 @@ public class DiceRollerGUI extends JFrame {
 		}
 		
 		try {
-			if (diceSidesField.getText().length() == 0 || Integer.parseInt(diceSidesField.getText()) < 2)
+			if (diceSidesField.getText().length() == 0 || Integer.parseInt(diceSidesField.getText()) < 2) {
 				throw new NumberFormatException();
+			}
 			
 			diceSidesLabel.setForeground(Color.BLACK);
 		} catch (NumberFormatException e2) {
@@ -185,8 +204,9 @@ public class DiceRollerGUI extends JFrame {
 		}
 		
 		try {
-			if (modField.getText().length() > 0)
+			if (modField.getText().length() > 0) {
 				modifier = Integer.parseInt(modField.getText());
+			}
 			
 			modLabel.setForeground(Color.BLACK);
 		} catch (NumberFormatException e2) {
